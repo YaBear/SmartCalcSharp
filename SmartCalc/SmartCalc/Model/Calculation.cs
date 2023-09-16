@@ -9,9 +9,9 @@ namespace SmartCalc
 {
     internal class Calculation
     {
-        private HashSet<char> operators_ = new HashSet<char>(new char[] { '+', '-', '*', '/', '^' } );
+        private readonly HashSet<char> operators_ = new(new char[] { '+', '-', '*', '/', '^' } );
         private string result_ = "";
-        private Stack<double> numbers_ = new();
+        private readonly Stack<double> numbers_ = new();
 
         private int CheckDigit(string expression, int pos)
         {
@@ -25,9 +25,9 @@ namespace SmartCalc
                     end_pos += 2;
                 }
             }
-            current_number += expression.Substring(pos, end_pos - pos);
+            current_number += expression[pos..end_pos];
             numbers_.Push(double.Parse(current_number));
-            current_number = current_number.Remove(0);
+            _ = current_number.Remove(0);
             return end_pos;
         }
 
@@ -134,7 +134,7 @@ namespace SmartCalc
                     {
                         end_pos++;
                     }
-                    string func = expression.Substring(pos, end_pos - pos);
+                    string func = expression[pos..end_pos];
                     Functions(func);
                     pos = end_pos;
                 }

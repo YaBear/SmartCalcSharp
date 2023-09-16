@@ -8,7 +8,8 @@ namespace SmartCalc
 {
     internal class Converter
     {
-        private Dictionary<string, int> precedence_ = new Dictionary<string, int> {
+        private readonly Dictionary<string, int> precedence_ = new()
+        {
           {"+", 1},    {"-", 1},    {"*", 2},   {"/", 2},    {"^", 4},
           {"cos", 4},  {"sin", 4},  {"tan", 4}, {"acos", 4}, {"asin", 4},
           {"atan", 4}, {"sqrt", 4}, {"log", 4}, {"ln", 4},   {"mod", 2}
@@ -31,7 +32,7 @@ namespace SmartCalc
                     endPos += 2;
                 }
             }
-            rpn_ += infix.Substring(pos, endPos - pos) + ' ';
+            rpn_ += infix[pos..endPos] + ' ';
             return endPos;
         }
         private void CheckOperand(string infix, int pos, Stack<string> operators)
@@ -77,7 +78,7 @@ namespace SmartCalc
                     {
                         end_pos++;
                     }
-                    string func = infix.Substring(pos, end_pos - pos) + ' ';
+                    string func = infix[pos..end_pos] + ' ';
                     operators.Push(func);
                     pos = end_pos;
                 } else if (infix[pos] == '(')

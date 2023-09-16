@@ -4,8 +4,8 @@ namespace SmartCalc
 {
     internal class Validator
     {
-        private HashSet<char> operators_ = new HashSet<char>(new char[] { '+', '-', '*', '/', '^' });
-        private HashSet<string> functions_ = new HashSet<string>(new string[] { "cos", "sin", "tan", "acos", "asin", "atan", "sqrt", "log", "ln", "mod" });
+        private readonly HashSet<char> operators_ = new(new char[] { '+', '-', '*', '/', '^' });
+        private readonly HashSet<string> functions_ = new(new string[] { "cos", "sin", "tan", "acos", "asin", "atan", "sqrt", "log", "ln", "mod" });
         public Validator() { }
         private bool IsOperator(char token)
         {
@@ -92,7 +92,7 @@ namespace SmartCalc
                     {
                         ++end_pos;
                     }
-                    string func = expression.Substring(pos, end_pos - pos);
+                    string func = expression[pos..end_pos];
                     if (!IsFunction(func)) return false;
                     if (pos > 0 && char.IsDigit(expression[pos - 1]) && func != "mod") return false;
                     pos = end_pos;
@@ -123,7 +123,7 @@ namespace SmartCalc
                     ++pos;
                 }
             }
-            if (IsOperator(expression[expression.Length - 1])) return false;
+            if (IsOperator(expression[^1])) return false;
             if (left_bracket_count != right_bracket_count) return false;
             if (number_count == 0) return false;
             return true;

@@ -22,29 +22,69 @@ namespace SmartCalc
     {
         private readonly Validator validator = new();
         private readonly Converter converter = new();
-        private readonly Calculation calculation = new Calculation();
+        private readonly Calculation calculation = new();
 
-        private void Button1_Click(object sender, RoutedEventArgs e)
+        private void Calc_Click(object sender, RoutedEventArgs e)
         {
-            string inputText = textBox.Text;
+            string inputText = expressionField.Text;
+            if (inputText.IndexOf('x') != -1 && double.TryParse(xValueField.Text, out double xValue))
+            {
+                inputText = inputText.Replace("x", xValue.ToString());
+            }
             bool isValid = validator.IsValid(inputText);
-            label1.Content = isValid ? "true" : "false";
+            statusLabel.Content = isValid ? "true" : "false";
             if (isValid)
             {
                 string rpn = converter.InfixToRPN(inputText);
-                label2.Content = rpn;
+                rpnLabel.Content = rpn;
                 calculation.Calculate(rpn);
                 string result = calculation.GetResult();
-                label3.Content = result;
+                expressionField.Text = result;
             } else
             {
-                label2.Content = "RPN";
-                label3.Content = "Result";
+                rpnLabel.Content = "RPN";
+                expressionField.Clear();
             }
+        }
+
+        private void BaseButtonClick(object sender, RoutedEventArgs e)
+        {
+            var buttonString = sender.ToString();
+            var index = buttonString.LastIndexOf(':');
+            expressionField.AppendText(buttonString[(index + 2)..]);
+        }
+
+        private void AC_Click(object sender, RoutedEventArgs e)
+        {
+            expressionField.Clear();
+            xValueField.Clear();
+            statusLabel.Content = "Status";
+            rpnLabel.Content = "RPN";
+        }
+
+        private void Backspace_Click(object sender, RoutedEventArgs e)
+        {
+            int len = expressionField.Text.Length;
+            if (len > 0)
+            {
+                expressionField.Text = expressionField.Text.Remove(expressionField.Text.Length - 1);
+            }
+        }
+        private void FuncButtonClick(object sender, RoutedEventArgs e)
+        {
+            var buttonString = sender.ToString();
+            var index = buttonString.LastIndexOf(':');
+            expressionField.AppendText(buttonString[(index + 2)..] + "(");
         }
         public MainWindow()
         {
+            string[] commandLineArgs = Environment.GetCommandLineArgs();
             InitializeComponent();
+            if (commandLineArgs.Length == 1 || commandLineArgs[1] != "-debug")
+            {
+                rpnLabel.Visibility = Visibility.Hidden;
+                statusLabel.Visibility = Visibility.Hidden;
+            }
         }
     }
 }
