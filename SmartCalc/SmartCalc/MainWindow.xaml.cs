@@ -50,7 +50,7 @@ namespace SmartCalc
         private void BaseButtonClick(object sender, RoutedEventArgs e)
         {
             var buttonString = sender.ToString();
-            var index = buttonString.LastIndexOf(':');
+            var index = buttonString!.LastIndexOf(':');
             expressionField.AppendText(buttonString[(index + 2)..]);
         }
 
@@ -73,7 +73,7 @@ namespace SmartCalc
         private void FuncButtonClick(object sender, RoutedEventArgs e)
         {
             var buttonString = sender.ToString();
-            var index = buttonString.LastIndexOf(':');
+            var index = buttonString!.LastIndexOf(':');
             expressionField.AppendText(buttonString[(index + 2)..] + "(");
         }
         public MainWindow()
